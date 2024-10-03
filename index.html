@@ -37,7 +37,7 @@
         }
 
         .result {
-            font-size: 30px; /* Résultat en bas */
+            font-size: 30px; /* Résultat global en bas */
             font-weight: bold;
             text-align: center;
             margin-top: 20px;
@@ -79,43 +79,33 @@
             <tr>
                 <th>Niveau de Filleuls</th>
                 <th>Nombre de Filleuls</th>
-                <th>Chiffre Annuel (€)</th>
-                <th>Résultat (€)</th>
             </tr>
         </thead>
         <tbody>
             <tr>
                 <td>Niveau 1 (6%)</td>
                 <td><input type="number" id="niveau1" value="0" oninput="calculateResults()"></td>
-                <td><input type="number" id="chiffreNiveau1" value="0" oninput="calculateResults()"></td>
-                <td id="resultNiveau1" class="result">0 €</td>
             </tr>
             <tr>
                 <td>Niveau 2 (3.5%)</td>
                 <td><input type="number" id="niveau2" value="0" oninput="calculateResults()"></td>
-                <td><input type="number" id="chiffreNiveau2" value="0" oninput="calculateResults()"></td>
-                <td id="resultNiveau2" class="result">0 €</td>
             </tr>
             <tr>
                 <td>Niveau 3 (2%)</td>
                 <td><input type="number" id="niveau3" value="0" oninput="calculateResults()"></td>
-                <td><input type="number" id="chiffreNiveau3" value="0" oninput="calculateResults()"></td>
-                <td id="resultNiveau3" class="result">0 €</td>
             </tr>
             <tr>
                 <td>Niveau 4 (1.5%)</td>
                 <td><input type="number" id="niveau4" value="0" oninput="calculateResults()"></td>
-                <td><input type="number" id="chiffreNiveau4" value="0" oninput="calculateResults()"></td>
-                <td id="resultNiveau4" class="result">0 €</td>
             </tr>
             <tr>
                 <td>Niveau 5 (0.5%)</td>
                 <td><input type="number" id="niveau5" value="0" oninput="calculateResults()"></td>
-                <td><input type="number" id="chiffreNiveau5" value="0" oninput="calculateResults()"></td>
-                <td id="resultNiveau5" class="result">0 €</td>
             </tr>
         </tbody>
     </table>
+
+    <div id="global-result" class="result">Résultat Global : 0 €</div>
 
     <script>
         function formatNumber(num) {
@@ -123,25 +113,29 @@
         }
 
         function calculateResults() {
-            // Définir les pourcentages pour chaque niveau
+            const niveaux = [
+                parseFloat(document.getElementById("niveau1").value) || 0,
+                parseFloat(document.getElementById("niveau2").value) || 0,
+                parseFloat(document.getElementById("niveau3").value) || 0,
+                parseFloat(document.getElementById("niveau4").value) || 0,
+                parseFloat(document.getElementById("niveau5").value) || 0,
+            ];
+
+            // Chiffre d'affaires total pour calculer les résultats
+            const chiffreTotal = 100000; // À remplacer par le chiffre d'affaires réel
             const percentages = [0.06, 0.035, 0.02, 0.015, 0.005];
 
-            // Calculer les résultats pour chaque niveau
-            for (let i = 1; i <= 5; i++) {
-                const niveau = parseFloat(document.getElementById(`niveau${i}`).value) || 0;
-                const chiffre = parseFloat(document.getElementById(`chiffreNiveau${i}`).value) || 0;
-                const result = niveau * chiffre * percentages[i - 1]; // Calcul du résultat
-
-                // Mettre à jour le texte du résultat
-                document.getElementById(`resultNiveau${i}`).textContent = formatNumber(result.toFixed(2)) + " €";
-
-                // Rendre visible le résultat
-                if (niveau > 0 || chiffre > 0) {
-                    document.getElementById(`resultNiveau${i}`).classList.add("visible");
-                } else {
-                    document.getElementById(`resultNiveau${i}`).classList.remove("visible");
-                }
+            // Calculer le résultat global
+            let totalResult = 0;
+            for (let i = 0; i < niveaux.length; i++) {
+                totalResult += niveaux[i] * chiffreTotal * percentages[i];
             }
+
+            // Mettre à jour le texte du résultat global
+            document.getElementById("global-result").textContent = `Résultat Global : ${formatNumber(totalResult.toFixed(2))} €`;
+
+            // Apparition du résultat en fondu
+            document.getElementById("global-result").classList.add("visible");
         }
 
         // Initialiser le calcul au chargement de la page
