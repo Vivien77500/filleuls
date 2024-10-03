@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Inter', sans-serif; /* Police Inter */
+            background-color: rgba(255, 255, 255, 0.6);
+            color: #333;
+            padding: 20px;
+            position: relative; /* Pour gérer l'arrière-plan */
+            font-weight: bold; /* Toutes les écritures en gras */
+        }
+
+        h2 {
+            font-size: 45px; /* Titre principal */
+            text-align: center;
+            color: #2a9d8f;
+        }
+
+        table {
+            width: 100%;
+            max-width: 900px; /* Largeur maximale du tableau */
+            margin: 20px auto;
+            border-collapse: collapse;
+            background-color: rgba(255, 255, 255, 0.4); /* Opacité du fond à 40% */
+        }
+
+        th, td {
+            text-align: center;
+            padding: 12px;
+            border: 1px solid #ddd;
+            font-size: 18px;
+        }
+
+        .result {
+            font-size: 30px; /* Résultat en bas */
+            font-weight: bold;
+            text-align: center;
+            margin-top: 20px;
+            opacity: 0;
+            transition: opacity 0.5s ease;
+        }
+
+        .visible {
+            opacity: 1;
+        }
+
+        /* Cacher les flèches sur les champs de saisie */
+        input[type="number"] {
+            -moz-appearance: textfield; /* Firefox */
+            -webkit-appearance: none; /* Chrome, Safari */
+            appearance: none; /* Standard */
+            border: 1px solid #ccc; /* Cadre discret autour des champs */
+            border-radius: 4px; /* Arrondi les bords */
+            padding: 8px; /* Ajout de rembourrage */
+            width: calc(90% - 20px); /* Ajustement de la largeur pour le padding */
+            margin: 5px auto; /* Centrer les champs */
+            box-sizing: border-box; /* Inclure la bordure dans la largeur */
+        }
+
+        input[type="number"]::-webkit-inner-spin-button,
+        input[type="number"]::-webkit-outer-spin-button {
+            -webkit-appearance: none; /* Chrome, Safari */
+            margin: 0; /* Enlever la marge */
+        }
+    </style>
+    <title>Calcul des Filleuls</title>
+</head>
+<body>
+
+    <h2>Calcul des Filleuls</h2>
+
+    <table>
+        <thead>
+            <tr>
+                <th>Niveau de Filleuls</th>
+                <th>Nombre de Filleuls</th>
+                <th>Chiffre Annuel (€)</th>
+                <th>Résultat (€)</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td>Niveau 1 (6%)</td>
+                <td><input type="number" id="niveau1" value="0" oninput="calculateResults()"></td>
+                <td><input type="number" id="chiffreNiveau1" value="0" oninput="calculateResults()"></td>
+                <td id="resultNiveau1" class="result">0 €</td>
+            </tr>
+            <tr>
+                <td>Niveau 2 (3.5%)</td>
+                <td><input type="number" id="niveau2" value="0" oninput="calculateResults()"></td>
+                <td><input type="number" id="chiffreNiveau2" value="0" oninput="calculateResults()"></td>
+                <td id="resultNiveau2" class="result">0 €</td>
+            </tr>
+            <tr>
+                <td>Niveau 3 (2%)</td>
+                <td><input type="number" id="niveau3" value="0" oninput="calculateResults()"></td>
+                <td><input type="number" id="chiffreNiveau3" value="0" oninput="calculateResults()"></td>
+                <td id="resultNiveau3" class="result">0 €</td>
+            </tr>
+            <tr>
+                <td>Niveau 4 (1.5%)</td>
+                <td><input type="number" id="niveau4" value="0" oninput="calculateResults()"></td>
+                <td><input type="number" id="chiffreNiveau4" value="0" oninput="calculateResults()"></td>
+                <td id="resultNiveau4" class="result">0 €</td>
+            </tr>
+            <tr>
+                <td>Niveau 5 (0.5%)</td>
+                <td><input type="number" id="niveau5" value="0" oninput="calculateResults()"></td>
+                <td><input type="number" id="chiffreNiveau5" value="0" oninput="calculateResults()"></td>
+                <td id="resultNiveau5" class="result">0 €</td>
+            </tr>
+        </tbody>
+    </table>
+
+    <script>
+        function formatNumber(num) {
+            return num.toString().replace(/\B(?=(\d{3})+(?!\d))/g, " "); // Ajoute un espace comme séparateur de milliers
+        }
+
+        function calculateResults() {
+            // Définir les pourcentages pour chaque niveau
+            const percentages = [0.06, 0.035, 0.02, 0.015, 0.005];
+
+            // Calculer les résultats pour chaque niveau
+            for (let i = 1; i <= 5; i++) {
+                const niveau = parseFloat(document.getElementById(`niveau${i}`).value) || 0;
+                const chiffre = parseFloat(document.getElementById(`chiffreNiveau${i}`).value) || 0;
+                const result = niveau * chiffre * percentages[i - 1]; // Calcul du résultat
+
+                // Mettre à jour le texte du résultat
+                document.getElementById(`resultNiveau${i}`).textContent = formatNumber(result.toFixed(2)) + " €";
+
+                // Rendre visible le résultat
+                if (niveau > 0 || chiffre > 0) {
+                    document.getElementById(`resultNiveau${i}`).classList.add("visible");
+                } else {
+                    document.getElementById(`resultNiveau${i}`).classList.remove("visible");
+                }
+            }
+        }
+
+        // Initialiser le calcul au chargement de la page
+        calculateResults();
+    </script>
+
+</body>
+</html>
